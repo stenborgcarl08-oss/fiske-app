@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#00b4d8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Logga dina fångster, spara fiskeplatser och se statistik.">
+  <title>FiskeApp</title>
+
+  <!-- Manifest för PWA-installation -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="images/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="images/icon.svg">
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ========== Kartvy ========== -->
+  <div id="view-map" class="view active">
+    <div id="map"></div>
+    <div id="map-hint" class="map-hint">Tryck = ny fångst · Långtryck = ny plats</div>
+    <button id="locate-btn" aria-label="Min position">&#9678;</button>
+  </div>
+
+  <!-- ========== Fångstlista ========== -->
+  <div id="view-catches" class="view">
+    <div class="list-header">
+      <h1>Fångster</h1>
+      <div class="filters">
+        <select id="filter-species"><option value="">Alla arter</option></select>
+        <select id="filter-month"><option value="">Alla månader</option></select>
+        <select id="filter-spot"><option value="">Alla platser</option></select>
+      </div>
+    </div>
+    <div id="catch-list" class="list-content"></div>
+  </div>
+
+  <!-- ========== Statistik ========== -->
+  <div id="view-stats" class="view">
+    <div class="list-header">
+      <h1>Statistik</h1>
+    </div>
+    <div id="stats-summary" class="stats-grid"></div>
+    <div id="stats-species" class="list-content"></div>
+    <div class="export-section">
+      <button id="export-btn" class="btn btn-secondary">Exportera data (JSON)</button>
+    </div>
+  </div>
+
+  <!-- ========== Sparade platser ========== -->
+  <div id="view-spots" class="view">
+    <div class="list-header">
+      <h1>Platser</h1>
+    </div>
+    <div id="spot-list" class="list-content"></div>
+  </div>
+
+</div>
+
+<!-- ========== Bottomnavigation ========== -->
+<nav id="bottom-nav">
+  <button class="nav-tab active" data-view="map">
+    <span class="nav-icon">&#127758;</span>
+    Karta
+  </button>
+  <button class="nav-tab" data-view="catches">
+    <span class="nav-icon">&#128031;</span>
+    Fångster
+  </button>
+  <button class="nav-tab" data-view="stats">
+    <span class="nav-icon">&#128202;</span>
+    Statistik
+  </button>
+  <button class="nav-tab" data-view="spots">
+    <span class="nav-icon">&#128205;</span>
+    Platser
+  </button>
+</nav>
+
+<!-- ========== Modal: Ny fångst ========== -->
+<div id="catch-modal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>Logga fångst</h2>
+      <button class="modal-close" data-close="catch-modal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="catch-form">
+        <div class="form-group">
+          <label for="catch-species">Art *</label>
+          <input type="text" id="catch-species" required placeholder="t.ex. gädda, abborre">
+        </div>
+
+        <div class="form-group">
+          <label for="catch-lure">Bete / Metod</label>
+          <input type="text" id="catch-lure" list="lure-suggestions" placeholder="t.ex. jigg, wobbler">
+          <datalist id="lure-suggestions">
+            <option value="jerk">
+            <option value="jigg">
+            <option value="pig shad">
+            <option value="wobbler">
+            <option value="drop shot">
+          </datalist>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="catch-length">Längd (cm)</label>
+            <input type="number" id="catch-length" min="0" step="1" placeholder="—">
+          </div>
+          <div class="form-group">
+            <label for="catch-weight">Vikt (kg)</label>
+            <input type="number" id="catch-weight" min="0" step="0.1" placeholder="—">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="catch-datetime">Datum & tid</label>
+          <input type="datetime-local" id="catch-datetime">
+        </div>
+
+        <div class="form-group">
+          <label>Väder (hämtas automatiskt)</label>
+          <div id="weather-info" class="weather-info">
+            <span class="weather-chip">Hämtar...</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="catch-note">Anteckning</label>
+          <textarea id="catch-note" rows="2" placeholder="Valfri anteckning..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Foto</label>
+          <div class="photo-upload">
+            <label for="catch-photo">&#128247; Välj bild</label>
+            <input type="file" id="catch-photo" accept="image/*" capture="environment">
+            <img id="photo-preview" class="photo-preview" alt="Förhandsgranskning">
+          </div>
+        </div>
+
+        <!-- Dolda fält för koordinater och väder -->
+        <input type="hidden" id="catch-lat">
+        <input type="hidden" id="catch-lng">
+        <input type="hidden" id="catch-temp">
+        <input type="hidden" id="catch-wind">
+        <input type="hidden" id="catch-pressure">
+
+        <button type="submit" class="btn btn-primary">Spara fångst</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Modal: Ny/Redigera plats ========== -->
+<div id="spot-modal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="spot-modal-title">Spara plats</h2>
+      <button class="modal-close" data-close="spot-modal">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="spot-form">
+        <div class="form-group">
+          <label for="spot-name">Namn *</label>
+          <input type="text" id="spot-name" required placeholder="t.ex. Vassviken norra">
+        </div>
+        <div class="form-group">
+          <label for="spot-note">Anteckning</label>
+          <textarea id="spot-note" rows="3" placeholder="t.ex. fiska parallellt med vasslinjen"></textarea>
+        </div>
+        <input type="hidden" id="spot-lat">
+        <input type="hidden" id="spot-lng">
+        <input type="hidden" id="spot-id">
+        <button type="submit" class="btn btn-primary">Spara plats</button>
+        <button type="button" id="spot-delete-btn" class="btn btn-danger" style="display:none;">Ta bort plats</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ========== Modal: Fångstdetaljer ========== -->
+<div id="detail-modal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="detail-title">Detaljer</h2>
+      <button class="modal-close" data-close="detail-modal">&times;</button>
+    </div>
+    <div id="detail-body" class="modal-body"></div>
+  </div>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+
+<script src="js/app.js"></script>
+</body>
+</html>

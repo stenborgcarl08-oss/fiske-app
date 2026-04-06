@@ -1,0 +1,734 @@
+/* ===========================
+   Globala variabler & reset
+   — Definierar färgpalett och
+     typografi för hela appen
+   =========================== */
+
+:root {
+  --bg: #0d1b2a;
+  --bg-card: #1b2838;
+  --bg-input: #233044;
+  --text: #e0e0e0;
+  --text-muted: #8899aa;
+  --accent: #00b4d8;
+  --accent-dim: #0077b6;
+  --danger: #e63946;
+  --success: #2a9d8f;
+  --nav-height: 60px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --radius: 10px;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ===========================
+   Appcontainer
+   — Fyller hela skärmen
+   =========================== */
+
+#app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===========================
+   Vyer
+   — Varje flik är en dold vy,
+     den aktiva visas
+   =========================== */
+
+.view {
+  display: none;
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.view.active {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===========================
+   Karta
+   — Fyller hela den tillgängliga
+     ytan ovanför navigationen
+   =========================== */
+
+#map {
+  flex: 1;
+  width: 100%;
+  z-index: 1;
+}
+
+/* Anpassade kluster-ikoner */
+.catch-cluster {
+  background: none;
+}
+
+.cluster-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--accent);
+  border: 3px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Fångstmarkör */
+.catch-marker {
+  width: 28px;
+  height: 28px;
+  background: var(--accent);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Platsmarkör */
+.spot-marker {
+  width: 32px;
+  height: 32px;
+  background: var(--success);
+  border: 2px solid #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.spot-marker span {
+  transform: rotate(45deg);
+}
+
+/* Leaflet-popup — mörkt tema */
+.leaflet-popup-content-wrapper {
+  background: var(--bg-card);
+  color: var(--text);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.leaflet-popup-tip {
+  background: var(--bg-card);
+}
+
+.leaflet-popup-content {
+  margin: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.popup-title {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.popup-detail {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.popup-btn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 6px 12px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* Plats-knapp på kartan */
+#locate-btn {
+  position: fixed;
+  bottom: calc(var(--nav-height) + var(--safe-bottom) + 16px);
+  right: 16px;
+  z-index: 1000;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* ===========================
+   Bottomnavigation
+   — Fast navigering i botten
+     med fyra flikar
+   =========================== */
+
+#bottom-nav {
+  display: flex;
+  background: var(--bg-card);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: var(--safe-bottom);
+  z-index: 1000;
+  flex-shrink: 0;
+}
+
+.nav-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: var(--nav-height);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  transition: color 0.2s;
+  gap: 2px;
+}
+
+.nav-tab .nav-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.nav-tab.active {
+  color: var(--accent);
+}
+
+/* ===========================
+   Modal
+   — Helskärmsmodal som
+     glider upp underifrån
+   =========================== */
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 2000;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+.modal {
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  background: var(--bg);
+  border-radius: var(--radius) var(--radius) 0 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  animation: slideUp 0.25s ease-out;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 1;
+}
+
+.modal-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.modal-close {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-input);
+  border: none;
+  color: var(--text);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-body {
+  padding: 16px;
+}
+
+/* ===========================
+   Formulär
+   — Fält och knappar för
+     fångst- och platsformulär
+   =========================== */
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg-input);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 15px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: var(--accent);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.form-group input[readonly] {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.weather-info {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.weather-chip {
+  background: var(--bg-input);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.weather-chip strong {
+  color: var(--text);
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn:active {
+  opacity: 0.8;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  margin-top: 8px;
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+  margin-top: 8px;
+}
+
+.btn-secondary {
+  background: var(--bg-input);
+  color: var(--text);
+  margin-top: 8px;
+}
+
+/* Fotouppladdning */
+.photo-upload {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.photo-upload label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: var(--bg-input);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.photo-upload input {
+  display: none;
+}
+
+.photo-preview {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: cover;
+  display: none;
+}
+
+.photo-preview.has-photo {
+  display: block;
+}
+
+/* ===========================
+   Listvyer
+   — Gemensamma stilar för
+     fångst- och platslistor
+   =========================== */
+
+.list-header {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.list-header h1 {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filters select {
+  padding: 8px 12px;
+  background: var(--bg-input);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+}
+
+.list-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 16px 16px;
+}
+
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.card:active {
+  background: var(--bg-input);
+}
+
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+}
+
+.card-species {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.card-date {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.card-details {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.card-tag {
+  background: var(--bg-input);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.card-photo {
+  width: 100%;
+  max-height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  gap: 8px;
+}
+
+.empty-state .empty-icon {
+  font-size: 48px;
+  opacity: 0.5;
+}
+
+/* ===========================
+   Statistik
+   — Sammanfattningskort och
+     sifferöversikt
+   =========================== */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  padding: 16px;
+  text-align: center;
+}
+
+.stat-card.wide {
+  grid-column: 1 / -1;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ===========================
+   Detalj-modal
+   — Visar fullständig info om
+     en enskild fångst
+   =========================== */
+
+.detail-section {
+  margin-bottom: 16px;
+}
+
+.detail-section h3 {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 14px;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-label {
+  color: var(--text-muted);
+}
+
+.detail-photo {
+  width: 100%;
+  border-radius: var(--radius);
+  margin-top: 8px;
+}
+
+/* ===========================
+   Exportknapp
+   — Ligger längst ner i
+     statistikvyn
+   =========================== */
+
+.export-section {
+  padding: 16px;
+}
+
+/* ===========================
+   Platsvyn
+   — Lista med sparade
+     fiskeplatser
+   =========================== */
+
+.spot-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.spot-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--success);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.spot-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.spot-name {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.spot-coords {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.spot-note {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ===========================
+   Hjälptext på kartan
+   — Informerar användaren om
+     tryck- och långtryck
+   =========================== */
+
+.map-hint {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: var(--bg-card);
+  color: var(--text-muted);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.map-hint.visible {
+  opacity: 1;
+}
+
+/* ===========================
+   Responsiv anpassning
+   — Större skärmar får bredare
+     layout men appen är primärt
+     designad för mobil
+   =========================== */
+
+@media (min-width: 600px) {
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .stat-card.wide {
+    grid-column: span 1;
+  }
+}

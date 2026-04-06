@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#0d1b2a"/>
+  <g transform="translate(256,256)">
+    <!-- Fisksilhuett som appikon -->
+    <ellipse cx="-20" cy="0" rx="120" ry="60" fill="#00b4d8"/>
+    <polygon points="80,0 130,-50 130,50" fill="#00b4d8"/>
+    <circle cx="-90" cy="-15" r="10" fill="#0d1b2a"/>
+    <path d="M-60,0 Q-20,25 20,0 Q-20,-25 -60,0" fill="#0d1b2a" opacity="0.2"/>
+  </g>
+  <text x="256" y="440" text-anchor="middle" font-family="system-ui,sans-serif" font-size="72" font-weight="bold" fill="#e0e0e0">FiskeApp</text>
+</svg>

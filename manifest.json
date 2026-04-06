@@ -1,0 +1,18 @@
+{
+  "name": "FiskeApp — Fångstdagbok",
+  "short_name": "FiskeApp",
+  "description": "Logga dina fångster, spara fiskeplatser och se statistik.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d1b2a",
+  "theme_color": "#00b4d8",
+  "icons": [
+    {
+      "src": "images/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
