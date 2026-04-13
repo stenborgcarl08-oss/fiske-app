@@ -49,11 +49,14 @@ body {
      ovanför navigationen
    =========================== */
 
+/* Padding i botten så att innehåll inte
+   hamnar bakom den fixerade navigationen */
 #app {
   flex: 1;
   min-height: 0;
   display: flex;
   flex-direction: column;
+  padding-bottom: calc(var(--nav-height) + var(--safe-bottom));
 }
 
 /* ===========================
@@ -206,13 +209,18 @@ body {
      med fyra flikar
    =========================== */
 
+/* Fixerad längst ner så att kartan
+   aldrig kan täcka navigationen */
 #bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   display: flex;
   background: var(--bg-card);
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding-bottom: var(--safe-bottom);
   z-index: 1000;
-  flex-shrink: 0;
 }
 
 .nav-tab {
