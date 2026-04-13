@@ -36,13 +36,22 @@ html, body {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Gör body till flex-container så att #app
+   och #bottom-nav delar på höjden korrekt */
+body {
+  display: flex;
+  flex-direction: column;
+}
+
 /* ===========================
    Appcontainer
-   — Fyller hela skärmen
+   — Fyller resterande höjd
+     ovanför navigationen
    =========================== */
 
 #app {
-  height: 100%;
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
 }
