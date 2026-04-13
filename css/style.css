@@ -717,6 +717,358 @@ html, body {
 }
 
 /* ===========================
+   Dashboard (Hem-vy)
+   — Startsida med översikt
+     och snabba genvägar
+   =========================== */
+
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background: var(--bg-card);
+}
+
+.home-header-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-greeting {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.home-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.home-weather {
+  display: flex;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.home-actions {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+}
+
+.home-action-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 8px;
+  background: var(--bg-input);
+  border: none;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  font-size: 11px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.home-action-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.home-action-icon {
+  font-size: 22px;
+}
+
+.home-summary {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px 12px;
+}
+
+.home-stat {
+  flex: 1;
+  background: var(--bg-card);
+  padding: 12px;
+  border-radius: var(--radius);
+  text-align: center;
+}
+
+.home-stat-value {
+  display: block;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.home-stat-text {
+  font-size: 13px;
+}
+
+.home-stat-label {
+  display: block;
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.home-section {
+  padding: 0 16px 12px;
+}
+
+.home-section-title {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.home-catch-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--bg-card);
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+
+.home-catch-item:active {
+  background: var(--bg-input);
+}
+
+.home-catch-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-catch-species {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.home-catch-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.home-catch-time {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.home-minimap {
+  height: 120px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--bg-card);
+}
+
+/* ===========================
+   Steg-formulär
+   — Fullskärmsmodal med ett
+     fält per steg
+   =========================== */
+
+.step-form-modal {
+  max-height: 100vh;
+  height: 100%;
+  border-radius: 0;
+}
+
+.step-progress {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--bg-input);
+}
+
+.step-dot.active {
+  background: var(--accent-dim);
+}
+
+.step-dot.current {
+  background: var(--accent);
+}
+
+.step-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 16px;
+}
+
+.step-field label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.step-field input,
+.step-field textarea {
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--bg-input);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 16px;
+  font-family: inherit;
+  outline: none;
+}
+
+.step-field input:focus,
+.step-field textarea:focus {
+  border-color: var(--accent);
+}
+
+.step-back {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+  align-self: flex-start;
+  font-family: inherit;
+}
+
+/* ===========================
+   Expanderbara kort
+   — Används i statistikvyn
+     för drag- och platsanalys
+   =========================== */
+
+.stats-section-title {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 16px 0 8px;
+}
+
+.expandable-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  margin-bottom: 6px;
+  overflow: hidden;
+}
+
+.expandable-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 14px;
+  cursor: pointer;
+}
+
+.expandable-header:active {
+  background: var(--bg-input);
+}
+
+.expandable-title {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.expandable-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.expand-arrow {
+  font-size: 10px;
+  transition: transform 0.2s;
+}
+
+.expandable-card.expanded .expand-arrow {
+  transform: rotate(90deg);
+}
+
+.expandable-body {
+  display: none;
+  padding: 0 14px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.expandable-card.expanded .expandable-body {
+  display: block;
+}
+
+.expand-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 13px;
+}
+
+.expand-label {
+  color: var(--text-muted);
+}
+
+/* ===========================
+   Toast-notiser
+   — Meddelanden som visas
+     tillfälligt längst ner
+   =========================== */
+
+.toast {
+  position: fixed;
+  bottom: calc(var(--nav-height) + var(--safe-bottom) + 16px);
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--bg-card);
+  color: var(--text);
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  z-index: 3000;
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s;
+  white-space: nowrap;
+}
+
+.toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast-action {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toast-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+/* ===========================
    Responsiv anpassning
    — Större skärmar får bredare
      layout men appen är primärt

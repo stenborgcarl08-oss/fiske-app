@@ -25,11 +25,90 @@
 
 <div id="app">
 
+  <!-- ========== Dashboard (Hem) ========== -->
+  <div id="view-home" class="view active">
+    <div class="home-header">
+      <div class="home-header-left">
+        <span id="home-greeting" class="home-greeting">God eftermiddag</span>
+        <span class="home-title">FiskeApp</span>
+      </div>
+      <div id="home-weather" class="home-weather">
+        <span>—</span>
+      </div>
+    </div>
+
+    <!-- Snabbknappar -->
+    <div class="home-actions">
+      <button id="home-log-catch" class="home-action-btn home-action-primary">
+        <span class="home-action-icon">&#128031;</span>
+        <span>Logga fångst</span>
+      </button>
+      <button id="home-save-spot" class="home-action-btn">
+        <span class="home-action-icon">&#128205;</span>
+        <span>Spara plats</span>
+      </button>
+      <button id="home-open-map" class="home-action-btn">
+        <span class="home-action-icon">&#128506;</span>
+        <span>Visa karta</span>
+      </button>
+    </div>
+
+    <!-- Sammanfattning -->
+    <div class="home-summary">
+      <div class="home-stat">
+        <span id="home-catch-count" class="home-stat-value">0</span>
+        <span class="home-stat-label">Fångster</span>
+      </div>
+      <div class="home-stat">
+        <span id="home-spot-count" class="home-stat-value">0</span>
+        <span class="home-stat-label">Platser</span>
+      </div>
+      <div class="home-stat">
+        <span id="home-best-lure" class="home-stat-value home-stat-text">—</span>
+        <span class="home-stat-label">Bästa drag</span>
+      </div>
+    </div>
+
+    <!-- Senaste fångster -->
+    <div class="home-section">
+      <h2 class="home-section-title">Senaste fångster</h2>
+      <div id="home-recent"></div>
+    </div>
+
+    <!-- Mini-karta -->
+    <div class="home-section">
+      <div id="home-minimap" class="home-minimap"></div>
+    </div>
+  </div>
+
   <!-- ========== Kartvy ========== -->
-  <div id="view-map" class="view active">
+  <div id="view-map" class="view">
     <div id="map"></div>
     <div id="map-hint" class="map-hint">Tryck = ny fångst · Långtryck = ny plats</div>
     <button id="locate-btn" aria-label="Min position">&#9678;</button>
+  </div>
+
+  <!-- ========== Statistik ========== -->
+  <div id="view-stats" class="view">
+    <div class="list-header">
+      <h1>Statistik</h1>
+      <div class="filters">
+        <select id="filter-period">
+          <option value="">Alla tider</option>
+          <option value="month">Denna månad</option>
+          <option value="3months">Senaste 3 mån</option>
+          <option value="year">I år</option>
+        </select>
+      </div>
+    </div>
+    <div class="list-content">
+      <div id="stats-summary" class="stats-grid"></div>
+      <div id="stats-lure"></div>
+      <div id="stats-spots"></div>
+      <div class="export-section">
+        <button id="export-btn" class="btn btn-secondary">Exportera data (JSON)</button>
+      </div>
+    </div>
   </div>
 
   <!-- ========== Fångstlista ========== -->
@@ -45,18 +124,6 @@
     <div id="catch-list" class="list-content"></div>
   </div>
 
-  <!-- ========== Statistik ========== -->
-  <div id="view-stats" class="view">
-    <div class="list-header">
-      <h1>Statistik</h1>
-    </div>
-    <div id="stats-summary" class="stats-grid"></div>
-    <div id="stats-species" class="list-content"></div>
-    <div class="export-section">
-      <button id="export-btn" class="btn btn-secondary">Exportera data (JSON)</button>
-    </div>
-  </div>
-
   <!-- ========== Sparade platser ========== -->
   <div id="view-spots" class="view">
     <div class="list-header">
@@ -69,17 +136,21 @@
 
 <!-- ========== Bottomnavigation ========== -->
 <nav id="bottom-nav">
-  <button class="nav-tab active" data-view="map">
+  <button class="nav-tab active" data-view="home">
+    <span class="nav-icon">&#127968;</span>
+    Hem
+  </button>
+  <button class="nav-tab" data-view="map">
     <span class="nav-icon">&#127758;</span>
     Karta
-  </button>
-  <button class="nav-tab" data-view="catches">
-    <span class="nav-icon">&#128031;</span>
-    Fångster
   </button>
   <button class="nav-tab" data-view="stats">
     <span class="nav-icon">&#128202;</span>
     Statistik
+  </button>
+  <button class="nav-tab" data-view="catches">
+    <span class="nav-icon">&#128031;</span>
+    Fångster
   </button>
   <button class="nav-tab" data-view="spots">
     <span class="nav-icon">&#128205;</span>
@@ -87,78 +158,78 @@
   </button>
 </nav>
 
-<!-- ========== Modal: Ny fångst ========== -->
-<div id="catch-modal" class="modal-overlay">
-  <div class="modal">
+<!-- ========== Steg-för-steg fångstformulär ========== -->
+<div id="step-form-overlay" class="modal-overlay">
+  <div class="modal step-form-modal">
     <div class="modal-header">
+      <button id="step-form-close" class="modal-close">&times;</button>
       <h2>Logga fångst</h2>
-      <button class="modal-close" data-close="catch-modal">&times;</button>
+      <div class="step-progress">
+        <span class="step-dot current active"></span>
+        <span class="step-dot"></span>
+        <span class="step-dot"></span>
+        <span class="step-dot"></span>
+      </div>
     </div>
     <div class="modal-body">
-      <form id="catch-form">
-        <div class="form-group">
-          <label for="catch-species">Art *</label>
-          <input type="text" id="catch-species" required placeholder="t.ex. gädda, abborre">
-        </div>
 
-        <div class="form-group">
-          <label for="catch-lure">Bete / Metod</label>
-          <input type="text" id="catch-lure" list="lure-suggestions" placeholder="t.ex. jigg, wobbler">
-          <datalist id="lure-suggestions">
-            <option value="jerk">
-            <option value="jigg">
-            <option value="pig shad">
-            <option value="wobbler">
-            <option value="drop shot">
-          </datalist>
+      <!-- Steg 1: Art -->
+      <div id="step-1" class="step-content">
+        <div class="step-field">
+          <label for="step-species">Vilken art?</label>
+          <input type="text" id="step-species" list="species-suggestions" placeholder="t.ex. gädda, abborre" autocomplete="off">
+          <datalist id="species-suggestions"></datalist>
         </div>
+        <button id="step-next-1" class="btn btn-primary">Nästa →</button>
+      </div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label for="catch-length">Längd (cm)</label>
-            <input type="number" id="catch-length" min="0" step="1" placeholder="—">
-          </div>
-          <div class="form-group">
-            <label for="catch-weight">Vikt (kg)</label>
-            <input type="number" id="catch-weight" min="0" step="0.1" placeholder="—">
-          </div>
+      <!-- Steg 2: Bete -->
+      <div id="step-2" class="step-content" style="display:none;">
+        <button id="step-back-2" class="step-back">← Tillbaka</button>
+        <div class="step-field">
+          <label for="step-lure">Vilket bete / metod?</label>
+          <input type="text" id="step-lure" list="lure-suggestions" placeholder="t.ex. jigg, wobbler" autocomplete="off">
+          <datalist id="lure-suggestions"></datalist>
         </div>
+        <button id="step-next-2" class="btn btn-primary">Nästa →</button>
+      </div>
 
-        <div class="form-group">
-          <label for="catch-datetime">Datum & tid</label>
-          <input type="datetime-local" id="catch-datetime">
+      <!-- Steg 3: Datum & tid -->
+      <div id="step-3" class="step-content" style="display:none;">
+        <button id="step-back-3" class="step-back">← Tillbaka</button>
+        <div class="step-field">
+          <label for="step-datetime">Datum & tid</label>
+          <input type="datetime-local" id="step-datetime">
         </div>
+        <button id="step-next-3" class="btn btn-primary">Nästa →</button>
+      </div>
 
-        <div class="form-group">
-          <label>Väder (hämtas automatiskt)</label>
-          <div id="weather-info" class="weather-info">
-            <span class="weather-chip">Hämtar...</span>
-          </div>
+      <!-- Steg 4: Valfritt -->
+      <div id="step-4" class="step-content" style="display:none;">
+        <button id="step-back-4" class="step-back">← Tillbaka</button>
+        <div class="step-field">
+          <label for="step-length">Längd (cm)</label>
+          <input type="number" id="step-length" min="0" step="1" placeholder="Valfritt">
         </div>
-
-        <div class="form-group">
-          <label for="catch-note">Anteckning</label>
-          <textarea id="catch-note" rows="2" placeholder="Valfri anteckning..."></textarea>
+        <div class="step-field">
+          <label for="step-weight">Vikt (kg)</label>
+          <input type="number" id="step-weight" min="0" step="0.1" placeholder="Valfritt">
         </div>
-
-        <div class="form-group">
+        <div class="step-field">
           <label>Foto</label>
           <div class="photo-upload">
-            <label for="catch-photo">&#128247; Välj bild</label>
-            <input type="file" id="catch-photo" accept="image/*" capture="environment">
-            <img id="photo-preview" class="photo-preview" alt="Förhandsgranskning">
+            <label for="step-photo">&#128247; Välj bild</label>
+            <input type="file" id="step-photo" accept="image/*" capture="environment">
+            <img id="step-photo-preview" class="photo-preview" alt="Förhandsgranskning">
           </div>
         </div>
+        <div class="step-field">
+          <label for="step-note">Anteckning</label>
+          <textarea id="step-note" rows="2" placeholder="Valfri anteckning..."></textarea>
+        </div>
+        <button id="step-save" class="btn btn-primary">Spara fångst</button>
+      </div>
 
-        <!-- Dolda fält för koordinater och väder -->
-        <input type="hidden" id="catch-lat">
-        <input type="hidden" id="catch-lng">
-        <input type="hidden" id="catch-temp">
-        <input type="hidden" id="catch-wind">
-        <input type="hidden" id="catch-pressure">
-
-        <button type="submit" class="btn btn-primary">Spara fångst</button>
-      </form>
     </div>
   </div>
 </div>
@@ -205,6 +276,16 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 
+<!-- Applikationsmoduler (ordningen är viktig) -->
+<script src="js/utils.js"></script>
+<script src="js/db.js"></script>
+<script src="js/router.js"></script>
+<script src="js/home.js"></script>
+<script src="js/map.js"></script>
+<script src="js/catch-form.js"></script>
+<script src="js/catches.js"></script>
+<script src="js/stats.js"></script>
+<script src="js/spots.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

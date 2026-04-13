@@ -1,11 +1,20 @@
 /* Service Worker — hanterar offlinecache för appen */
-const CACHE_NAME = 'fiskeapp-v1';
+const CACHE_NAME = 'fiskeapp-v2';
 
 /* Resurser som cachas vid installation */
 const APP_SHELL = [
   './',
   './index.html',
   './css/style.css',
+  './js/utils.js',
+  './js/db.js',
+  './js/router.js',
+  './js/home.js',
+  './js/map.js',
+  './js/catch-form.js',
+  './js/catches.js',
+  './js/stats.js',
+  './js/spots.js',
   './js/app.js',
   './manifest.json',
   './images/icon.svg',
